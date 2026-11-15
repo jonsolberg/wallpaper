@@ -4,6 +4,12 @@ Apps that change your wallpaper to the free, original wallpapers published on
 [jonsolberg.se](https://jonsolberg.se:8080/Pictures/) – a new picture every few hours, every day,
 every week, or as soon as a new one is published. Each app picks the picture size that fits the screen.
 
+<p align="center">
+  <img src="docs/screenshot-gallery.png" width="240" alt="Gallery with the current wallpaper and Next wallpaper button">
+  <img src="docs/screenshot-viewer.png" width="240" alt="A wallpaper opened, with Home, Lock and Both buttons">
+  <img src="docs/screenshot-auto.png" width="240" alt="Automatic change settings">
+</p>
+
 | Platform | Folder | What it is |
 |---|---|---|
 | Android 10+ | [`android/`](android) | Gallery, favourites, automatic change of home and/or lock screen, a "Next wallpaper" shortcut and quick settings tile |
