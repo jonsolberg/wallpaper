@@ -19,7 +19,8 @@ every week, or as soon as a new one is published. Each app picks the picture siz
 ## Download
 
 **[Latest release](https://github.com/jonsolberg/wallpaper/releases/latest)** – `Wallpapers.apk` for Android,
-`Wallpapers-Windows.exe` for Windows (no installer needed; it adds itself to start with Windows) and
+`Wallpapers-Windows.exe` for Windows (run it once and it installs itself for your user – no admin rights needed –
+with a Start menu shortcut, start with Windows, and an entry in Settings › Apps to uninstall it) and
 `jonsolberg-wallpapers_<version>_all.deb` for Linux:
 
 ```

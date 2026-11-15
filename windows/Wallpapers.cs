@@ -4,6 +4,7 @@
  *
  * Sits in the notification area, changes the desktop picture on a schedule and picks the picture size
  * that fits the screen. Click the icon for the menu; double-click it for the next wallpaper.
+ * The first run installs it for the current user (Programs folder, Start menu, Settings › Apps); --portable skips that.
  * Build: see build.sh (Mono mcs) – the result is a single .exe for .NET Framework 4.x, which every Windows 10/11 has.
  */
 using System;
@@ -25,8 +26,8 @@ using Microsoft.Win32;
 [assembly: AssemblyTitle("Wallpapers from jonsolberg.se")]
 [assembly: AssemblyProduct("Wallpapers")]
 [assembly: AssemblyCopyright("Copyright (C) 2026 Jon Solberg – GNU GPL v3")]
-[assembly: AssemblyVersion("1.6.1.0")]
-[assembly: AssemblyFileVersion("1.6.1.0")]
+[assembly: AssemblyVersion("1.7.0.0")]
+[assembly: AssemblyFileVersion("1.7.0.0")]
 
 namespace JonSolberg.Wallpapers
 {
@@ -99,7 +100,7 @@ namespace JonSolberg.Wallpapers
 
     public class App : ApplicationContext
     {
-        public const string Version = "1.6.1";
+        public const string Version = "1.7";
         public const string Base = "https://jonsolberg.se:8080";
         const string Kofi = "https://ko-fi.com/jonsolberg";
         const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run", RunName = "jonsolberg-wallpapers";
@@ -149,6 +150,9 @@ namespace JonSolberg.Wallpapers
             timer.Tick += (o, e) => Tick();
             timer.Start();
             First();
+            // A newer copy being installed asks this one to quit, so the file can be replaced.
+            var quitSignal = new EventWaitHandle(false, EventResetMode.AutoReset, QuitEvent);
+            ThreadPool.RegisterWaitForSingleObject(quitSignal, (o, t) => ui.Post(_ => Quit(), null), null, -1, true);
         }
 
         // ------------------------------------------------------------------ settings and files
@@ -480,14 +484,7 @@ namespace JonSolberg.Wallpapers
                 using (var k = Registry.CurrentUser.OpenSubKey(RunKey))
                     return k != null && k.GetValue(RunName) != null;
             }
-            set
-            {
-                using (var k = Registry.CurrentUser.CreateSubKey(RunKey))
-                {
-                    if (value) k.SetValue(RunName, "\"" + Application.ExecutablePath + "\" --background");
-                    else if (k.GetValue(RunName) != null) k.DeleteValue(RunName);
-                }
-            }
+            set { SetAutostart(value); }
         }
 
         static void Open(string url)
@@ -883,20 +880,129 @@ namespace JonSolberg.Wallpapers
 
         // ------------------------------------------------------------------ start
 
+        const string QuitEvent = "jonsolberg-wallpapers-quit";
+        const string UninstallKey = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\jonsolberg-wallpapers";
+        static readonly string InstallDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "jonsolberg-wallpapers");
+        static readonly string InstalledExe = Path.Combine(InstallDir, "Wallpapers.exe");
+        static readonly string StartMenuLink = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), "Wallpapers from jonsolberg.se.lnk");
+
+        static bool IsInstalledCopy
+        {
+            get { return string.Equals(Path.GetFullPath(Application.ExecutablePath), Path.GetFullPath(InstalledExe), StringComparison.OrdinalIgnoreCase); }
+        }
+
+        /// <summary>Asks a running copy to quit and waits for it, so its file can be replaced.</summary>
+        static void StopRunningCopy()
+        {
+            EventWaitHandle ev;
+            if (!EventWaitHandle.TryOpenExisting(QuitEvent, out ev)) return;
+            using (ev) ev.Set();
+            for (int i = 0; i < 50; i++)
+            {
+                Mutex m;
+                if (!Mutex.TryOpenExisting("jonsolberg-wallpapers", out m)) return;
+                m.Dispose();
+                Thread.Sleep(100);
+            }
+        }
+
+        /// <summary>Copies the app to the user's Programs folder (no admin rights needed), with a Start menu
+        /// shortcut, an entry in Settings › Apps for uninstalling, and start with Windows. Updates work the same way.</summary>
+        static bool Install()
+        {
+            bool update = File.Exists(InstalledExe);
+            try
+            {
+                StopRunningCopy();
+                Directory.CreateDirectory(InstallDir);
+                File.Copy(Application.ExecutablePath, InstalledExe, true);
+
+                try
+                {
+                    var shellType = Type.GetTypeFromProgID("WScript.Shell");
+                    object shell = Activator.CreateInstance(shellType);
+                    object link = shellType.InvokeMember("CreateShortcut", BindingFlags.InvokeMethod, null, shell, new object[] { StartMenuLink });
+                    var lt = link.GetType();
+                    lt.InvokeMember("TargetPath", BindingFlags.SetProperty, null, link, new object[] { InstalledExe });
+                    lt.InvokeMember("WorkingDirectory", BindingFlags.SetProperty, null, link, new object[] { InstallDir });
+                    lt.InvokeMember("Description", BindingFlags.SetProperty, null, link, new object[] { "Wallpapers from jonsolberg.se" });
+                    lt.InvokeMember("IconLocation", BindingFlags.SetProperty, null, link, new object[] { InstalledExe + ",0" });
+                    lt.InvokeMember("Save", BindingFlags.InvokeMethod, null, link, null);
+                }
+                catch (Exception e) { Log("shortcut: " + e.Message); }
+
+                using (var k = Registry.CurrentUser.CreateSubKey(UninstallKey))
+                {
+                    k.SetValue("DisplayName", "Wallpapers from jonsolberg.se");
+                    k.SetValue("DisplayVersion", Version);
+                    k.SetValue("Publisher", "Jon Solberg");
+                    k.SetValue("DisplayIcon", InstalledExe);
+                    k.SetValue("InstallLocation", InstallDir);
+                    k.SetValue("UninstallString", "\"" + InstalledExe + "\" --uninstall");
+                    k.SetValue("URLInfoAbout", "https://github.com/jonsolberg/wallpaper");
+                    k.SetValue("EstimatedSize", (int)(new FileInfo(InstalledExe).Length / 1024), RegistryValueKind.DWord);
+                    k.SetValue("NoModify", 1, RegistryValueKind.DWord);
+                    k.SetValue("NoRepair", 1, RegistryValueKind.DWord);
+                }
+                if (!update || Autostart) SetAutostart(true);   // keeps the user's choice when updating
+
+                System.Diagnostics.Process.Start(InstalledExe, update ? "--updated" : "--installed");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log("install: " + e.Message);
+                MessageBox.Show("Couldn’t install Wallpapers (" + e.Message + "). It will run from where it is instead.", "Wallpapers",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+        }
+
+        static void Uninstall()
+        {
+            if (MessageBox.Show("Remove Wallpapers from jonsolberg.se from this computer?\n\nYour current desktop picture stays as it is.",
+                    "Uninstall Wallpapers", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK) return;
+            StopRunningCopy();
+            SetAutostart(false);
+            try { File.Delete(StartMenuLink); } catch { }
+            try { Registry.CurrentUser.DeleteSubKeyTree(UninstallKey, false); } catch { }
+            // The program can't delete itself while it runs, so a short-lived command does it a moment later.
+            string cmd = "/c ping -n 3 127.0.0.1 >nul & rmdir /s /q \"" + InstallDir + "\" & rmdir /s /q \"" + Dir + "\"";
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("cmd.exe", cmd) {
+                CreateNoWindow = true, UseShellExecute = false, WorkingDirectory = Path.GetTempPath() });
+            MessageBox.Show("Wallpapers has been removed.", "Wallpapers", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        static void SetAutostart(bool on)
+        {
+            using (var k = Registry.CurrentUser.CreateSubKey(RunKey))
+            {
+                if (on) k.SetValue(RunName, "\"" + InstalledExeOrSelf + "\" --background");
+                else if (k.GetValue(RunName) != null) k.DeleteValue(RunName);
+            }
+        }
+
+        static string InstalledExeOrSelf { get { return File.Exists(InstalledExe) ? InstalledExe : Application.ExecutablePath; } }
+
         [STAThread]
         static void Main(string[] args)
         {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            if (args.Contains("--uninstall")) { Uninstall(); return; }
+            if (!IsInstalledCopy && !args.Contains("--portable") && Install()) return;
             bool created;
             using (var single = new Mutex(true, "jonsolberg-wallpapers", out created))
             {
                 if (!created) return;   // already running
                 try { Native.SetProcessDPIAware(); } catch { }
                 ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;   // TLS 1.2
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                bool firstRun = !File.Exists(SettingsPath);
-                if (firstRun) Autostart = true;   // start with Windows unless the user turns it off in the menu
-                Application.Run(new App());
+                var app = new App();
+                if (args.Contains("--installed"))
+                    app.Balloon("Wallpapers is installed", "Find it here in the notification area, or in the Start menu. It starts with Windows; you can change that in its menu.");
+                if (args.Contains("--updated"))
+                    app.Balloon("Wallpapers is updated", "Version " + Version);
+                Application.Run(app);
             }
         }
     }
