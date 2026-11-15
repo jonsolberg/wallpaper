@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Wallpapers
+GenericName=Wallpaper changer
+Comment=New desktop wallpapers from jonsolberg.se, in the right size for your screen
+Exec=jonsolberg-wallpapers
+Icon=jonsolberg-wallpapers
+Terminal=false
+Categories=Utility;GTK;
+Keywords=wallpaper;background;desktop;jonsolberg;
+StartupNotify=false

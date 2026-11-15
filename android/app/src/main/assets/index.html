@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wallpapers</title>
+<style>
+:root{--bg:#f4f6fa;--ink:#0f1a28;--muted:#4f5f72;--card:#fff;--line:#d7dfe9;--accent:#6b4dff;--chip:#eceffe;--ok:#1f8a4c;--bad:#c0392b;--on:#fff}
+@media (prefers-color-scheme: dark){:root{--bg:#0a111c;--ink:#eef4fb;--muted:#adbdd0;--card:#121c2b;--line:#24344a;--accent:#a98bff;--chip:#1b2740;--ok:#6fe09d;--bad:#ff8a7a;--on:#140a33}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Roboto,"Segoe UI",sans-serif}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit}
+header{padding:18px 16px 6px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+h1{margin:0;font:600 1.6rem/1.1 "Iowan Old Style","Palatino Linotype",Georgia,serif}
+.sub{color:var(--muted);font-size:.82rem;margin-top:2px}
+.icon{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;padding:0}
+.icon svg{width:18px;height:18px}
+.spin svg{animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+
+.now{margin:10px 16px 0;display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px}
+.now img,.now .ph{width:64px;aspect-ratio:1080/2340;border-radius:10px;object-fit:cover;background:var(--chip);flex:none}
+.now .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.now .m{color:var(--muted);font-size:.82rem;margin-top:2px}
+.now .info{min-width:0;flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:10px 16px;font-weight:600;font-size:.88rem;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on)}
+.btn svg{width:16px;height:16px}
+.btn:disabled{opacity:.55}
+.now .btn{margin-top:10px}
+
+.tabs{position:sticky;top:0;z-index:3;background:var(--bg);display:flex;gap:6px;padding:14px 16px 10px;border-bottom:1px solid var(--line)}
+.tab{flex:1;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:9px 0;font-weight:600;font-size:.86rem;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--on)}
+main{padding:12px 16px 40px}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:.82rem;font-weight:500;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip .n{opacity:.7;margin-left:4px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (min-width:600px){.grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+.tile{position:relative;padding:0;border:0;background:var(--chip);border-radius:12px;overflow:hidden;aspect-ratio:1080/2340;cursor:pointer;display:block;width:100%}
+.tile img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .25s}
+.tile img.in{opacity:1}
+.tile.cur{outline:3px solid var(--accent);outline-offset:2px}
+.tile.hid img{opacity:.35;filter:grayscale(1)}
+.badge{position:absolute;left:6px;top:6px;background:var(--accent);color:#fff;font:700 .62rem/1 system-ui,sans-serif;letter-spacing:.04em;padding:4px 6px;border-radius:6px;text-transform:uppercase}
+.star{position:absolute;right:6px;top:5px;color:#ffd34d;font-size:1.05rem;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.cap{position:absolute;left:0;right:0;bottom:0;padding:16px 7px 6px;color:#fff;font-size:.72rem;font-weight:600;line-height:1.2;background:linear-gradient(transparent,rgba(0,0,0,.65));text-align:left}
+.empty{color:var(--muted);text-align:center;padding:40px 12px;border:1px dashed var(--line);border-radius:14px}
+.err{color:var(--bad);font-size:.84rem;margin:0 0 10px}
+
+.group{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:14px;overflow:hidden}
+.group h2{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0;padding:12px 16px 4px;font-weight:600}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:1px solid var(--line);cursor:pointer;width:100%;text-align:left;background:none;border-left:0;border-right:0;border-bottom:0}
+.group h2+.opt{border-top:0}
+.opt .l{flex:1;min-width:0}.opt .l small{display:block;color:var(--muted);font-size:.8rem;margin-top:1px}
+.radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center}
+.opt[aria-checked="true"] .radio{border-color:var(--accent)}
+.opt[aria-checked="true"] .radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.sw{width:44px;height:26px;border-radius:999px;background:var(--line);position:relative;flex:none;transition:background .15s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.opt[aria-checked="true"] .sw{background:var(--accent)}
+.opt[aria-checked="true"] .sw::after{transform:translateX(18px)}
+.seg{display:flex;gap:6px;padding:4px 16px 14px}
+.seg button{flex:1;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:9px 4px;font-size:.84rem;font-weight:600;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on)}
+.sel{display:flex;gap:10px;padding:0 16px 14px;flex-wrap:wrap}
+.sel label{display:flex;flex-direction:column;gap:4px;font-size:.8rem;color:var(--muted);flex:1;min-width:120px}
+select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.note{color:var(--muted);font-size:.8rem;margin:4px 4px 14px}
+
+.hist{list-style:none;margin:0;padding:0}
+.hist li{display:flex;gap:12px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.hist li:first-child{border-top:0}
+.hist img,.hist .ph{width:40px;aspect-ratio:1080/2340;border-radius:7px;object-fit:cover;background:var(--chip);flex:none}
+.hist .t{font-weight:600;font-size:.9rem}.hist .m{color:var(--muted);font-size:.78rem}
+.hist button{all:unset;display:flex;gap:12px;align-items:center;flex:1;cursor:pointer}
+
+.viewer{position:fixed;inset:0;z-index:10;background:#05070c;display:flex;flex-direction:column;color:#eef4fb}
+.viewer .stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px;touch-action:pan-y}
+.viewer img{max-width:100%;max-height:100%;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.6);transition:opacity .2s}
+.viewer .top{display:flex;align-items:center;gap:10px;padding:12px 12px 4px}
+.viewer .top .info{flex:1;min-width:0}
+.viewer .top .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.viewer .top .m{color:#a9b6c8;font-size:.8rem}
+.vbtn{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:10px 12px;font-weight:600;font-size:.84rem;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.vbtn svg{width:16px;height:16px}
+.vbtn.primary{background:var(--accent);border-color:var(--accent);color:var(--on)}
+.vbtn.on{color:#ffd34d;border-color:rgba(255,211,77,.5)}
+.viewer .acts{padding:8px 12px 14px;display:grid;gap:8px}
+.viewer .row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.viewer .lbl{font-size:.74rem;color:#a9b6c8;text-transform:uppercase;letter-spacing:.08em;text-align:center}
+.nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.4);border:0;color:#fff;display:grid;place-items:center}
+.nav.p{left:10px}.nav.n{right:10px}.nav svg{width:18px;height:18px}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;z-index:20;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:.88rem;font-weight:500;max-width:90vw;text-align:center;transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.bad{background:var(--bad);color:#fff}
+.foot{color:var(--muted);font-size:.78rem;text-align:center;margin-top:18px}
+.foot a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Wallpapers</h1><div class="sub" id="sub">from jonsolberg.se</div></div>
+  <button class="icon" id="refresh" type="button" aria-label="Check for new wallpapers"></button>
+</header>
+
+<section class="now" id="now">
+  <div class="ph" id="nowimg"></div>
+  <div class="info">
+    <div class="t" id="nowt">No wallpaper set yet</div>
+    <div class="m" id="nowm"></div>
+    <button class="btn primary" id="nextbtn" type="button"></button>
+  </div>
+</section>
+
+<nav class="tabs" role="tablist">
+  <button class="tab" role="tab" data-tab="gallery" aria-selected="true">Gallery</button>
+  <button class="tab" role="tab" data-tab="auto" aria-selected="false">Auto change</button>
+  <button class="tab" role="tab" data-tab="hist" aria-selected="false">History</button>
+</nav>
+
+<main>
+  <section id="gallery">
+    <p class="err" id="err" hidden></p>
+    <div class="chips" id="chips"></div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden></div>
+  </section>
+
+  <section id="auto" hidden>
+    <div class="group" id="modes"><h2>Change the wallpaper</h2></div>
+    <div class="group" id="when" hidden><h2>When</h2><div class="sel" id="whensel"></div></div>
+    <div class="group"><h2>Use it on</h2><div class="seg" id="target"></div></div>
+    <div class="group"><h2>Which wallpaper next</h2><div class="seg" id="order"></div><div id="toggles1"></div></div>
+    <div class="group"><h2>More</h2><div id="toggles2"></div></div>
+    <p class="note">Android may run automatic changes up to an hour late to save battery. You can also add a <b>Next wallpaper</b> tile to Quick Settings, or long-press the app icon for a shortcut.</p>
+  </section>
+
+  <section id="hist" hidden>
+    <ul class="hist" id="histlist"></ul>
+    <div class="empty" id="histempty" hidden>Wallpapers you set show up here.</div>
+  </section>
+  <div class="foot" id="foot"></div>
+</main>
+
+<div class="viewer" id="viewer" hidden role="dialog" aria-modal="true">
+  <div class="top">
+    <button class="vbtn" id="vclose" type="button" aria-label="Close"></button>
+    <div class="info"><div class="t" id="vt"></div><div class="m" id="vm"></div></div>
+    <button class="vbtn" id="vfav" type="button" aria-label="Favourite"></button>
+  </div>
+  <div class="stage" id="stage">
+    <img id="vimg" alt="">
+    <button class="nav p" id="vprev" type="button" aria-label="Previous"></button>
+    <button class="nav n" id="vnext" type="button" aria-label="Next"></button>
+  </div>
+  <div class="acts">
+    <div class="lbl">Set as wallpaper</div>
+    <div class="row">
+      <button class="vbtn primary" data-set="home" type="button">Home</button>
+      <button class="vbtn primary" data-set="lock" type="button">Lock</button>
+      <button class="vbtn primary" data-set="both" type="button">Both</button>
+    </div>
+    <div class="row" style="grid-template-columns:1fr 1fr">
+      <button class="vbtn" id="vhide" type="button"></button>
+      <button class="vbtn" id="vsave" type="button"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const I={
+  refresh:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>',
+  next:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5v14l10-7zM16 5h2v14h-2z"/></svg>',
+  close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>',
+  starO:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>',
+  prev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  fwd:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+  save:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  eyeOff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6C3.9 8.4 2 12 2 12s3.5 7 10 7a9.6 9.6 0 0 0 5.4-1.6"/></svg>'
+};
+const A=window.Android;
+let S=JSON.parse(A.state()), items=[], filter='all', shown=[], vi=-1, seenAtStart=S.seen||0, cbN=0;
+function call(fn,...args){return new Promise(res=>{const n='__cb'+(++cbN);window[n]=r=>{delete window[n];res(r);};A[fn](...args,n);});}
+function refreshState(){S=JSON.parse(A.state());}
+function toast(msg,bad){const t=$('toast');t.textContent=msg;t.className='toast show'+(bad?' bad':'');clearTimeout(t._h);t._h=setTimeout(()=>t.className='toast',2600);}
+const fmtDay=t=>new Date(t).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+const fmtWhen=t=>{const d=new Date(t),now=new Date(),tm=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  const day=new Date(d.getFullYear(),d.getMonth(),d.getDate()), today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const diff=Math.round((day-today)/864e5);
+  if(diff===0) return 'today '+tm; if(diff===1) return 'tomorrow '+tm; if(diff===-1) return 'yesterday '+tm;
+  return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})+' '+tm;};
+const TARGET={home:'Home screen',lock:'Lock screen',both:'Home & lock'};
+const byName=n=>items.find(x=>x.name===n);
+
+$('refresh').innerHTML=I.refresh; $('nextbtn').innerHTML=I.next+'Next wallpaper'; $('vclose').innerHTML=I.close;
+$('vprev').innerHTML=I.prev; $('vnext').innerHTML=I.fwd;
+
+/* ---------- now card ---------- */
+function renderNow(){
+  const c=byName(S.current);
+  $('nowimg').outerHTML=c?`<img id="nowimg" src="${esc(c.url)}" alt="">`:'<div class="ph" id="nowimg"></div>';
+  $('nowt').textContent=c?c.title:(S.current?S.current:'No wallpaper set yet');
+  const m=S.mode;
+  let line = m==='off' ? 'Automatic change is off'
+    : m==='new' ? 'Changes when a new wallpaper is published'
+    : S.next ? 'Next change '+fmtWhen(S.next) : '';
+  if(m!=='off') line+=' · '+TARGET[S.target].toLowerCase();
+  $('nowm').textContent=line;
+}
+$('nowimg').parentNode.addEventListener('click',e=>{ if(e.target.id==='nowimg'&&S.current){const i=shown.findIndex(x=>x.name===S.current); if(i>=0) openView(i);} });
+
+/* ---------- gallery ---------- */
+function counts(){const f=new Set(S.favs),h=new Set(S.hidden);return {
+  all:items.length, new:items.filter(x=>x.time*1000>seenAtStart&&seenAtStart).length,
+  favs:items.filter(x=>f.has(x.name)).length, hidden:items.filter(x=>h.has(x.name)).length};}
+function renderChips(){
+  const c=counts(), L=[['all','All'],['new','New'],['favs','Favourites'],['hidden','Hidden']].filter(([k])=>k==='all'||c[k]>0||filter===k);
+  $('chips').innerHTML=L.map(([k,l])=>`<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${l}<span class="n">${c[k]}</span></button>`).join('');
+}
+$('chips').addEventListener('click',e=>{const b=e.target.closest('[data-f]'); if(!b) return; filter=b.dataset.f; renderGallery();});
+let io=null;
+function renderGallery(){
+  const f=new Set(S.favs),h=new Set(S.hidden);
+  shown=items.filter(x=> filter==='all'?true : filter==='favs'?f.has(x.name) : filter==='hidden'?h.has(x.name) : (x.time*1000>seenAtStart&&seenAtStart));
+  renderChips();
+  $('grid').innerHTML=shown.map((x,i)=>`<button class="tile${x.name===S.current?' cur':''}${h.has(x.name)?' hid':''}" data-i="${i}" aria-label="${esc(x.title)}">`+
+    `<img data-src="${esc(x.url)}" alt="">${x.name===S.current?'<span class="badge">Now</span>':(seenAtStart&&x.time*1000>seenAtStart?'<span class="badge">New</span>':'')}`+
+    `${f.has(x.name)?'<span class="star">★</span>':''}<span class="cap">${esc(x.title)}</span></button>`).join('');
+  $('empty').hidden=shown.length>0;
+  $('empty').textContent=items.length?'Nothing here yet.':'No wallpapers loaded yet. Check your connection and tap refresh.';
+  if(io) io.disconnect();
+  io=('IntersectionObserver' in window)?new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;load(en.target);io.unobserve(en.target);}),{rootMargin:'400px'}):null;
+  $('grid').querySelectorAll('img').forEach(im=>io?io.observe(im):load(im));
+}
+function load(im){im.onload=()=>im.classList.add('in');im.loading='lazy';im.src=im.dataset.src;}
+$('grid').addEventListener('click',e=>{const t=e.target.closest('.tile'); if(t) openView(+t.dataset.i);});
+
+async function loadList(manual){
+  const b=$('refresh'); b.classList.add('spin'); b.disabled=true;
+  const r=await call('load');
+  b.classList.remove('spin'); b.disabled=false;
+  items=(r.items||[]).map(x=>Object.assign({},x));
+  $('err').hidden=r.ok; if(!r.ok) $('err').textContent='Offline – showing the wallpapers from last time. ('+(r.error||'no connection')+')';
+  refreshState(); renderGallery(); renderNow(); renderHist();
+  $('sub').textContent=items.length+' wallpapers from jonsolberg.se';
+  if(manual&&r.ok) toast('Up to date');
+  if(r.ok&&items.length) A.set('seen',String(items[0].time*1000));
+}
+$('refresh').addEventListener('click',()=>loadList(true));
+
+/* ---------- next ---------- */
+$('nextbtn').addEventListener('click',async()=>{
+  const b=$('nextbtn'); b.disabled=true; b.innerHTML=I.next+'Changing…';
+  const r=await call('next');
+  b.disabled=false; b.innerHTML=I.next+'Next wallpaper';
+  refreshState(); renderNow(); renderGallery(); renderHist();
+  toast(r.ok?'Wallpaper: '+r.message:r.message,!r.ok);
+});
+
+/* ---------- viewer ---------- */
+function openView(i){vi=i; showView(); $('viewer').hidden=false;}
+function showView(){
+  const x=shown[vi]; if(!x) return;
+  const fav=S.favs.includes(x.name), hid=S.hidden.includes(x.name);
+  $('vimg').src=x.url; $('vt').textContent=x.title;
+  $('vm').textContent=[fmtDay(x.time*1000),x.name===S.current?'current wallpaper':''].filter(Boolean).join(' · ');
+  $('vfav').innerHTML=fav?I.star:I.starO; $('vfav').classList.toggle('on',fav);
+  $('vhide').innerHTML=hid?I.eye+'Use in rotation':I.eyeOff+'Skip in rotation';
+  $('vsave').innerHTML=I.save+'Save to phone';
+  $('vprev').hidden=vi<=0; $('vnext').hidden=vi>=shown.length-1;
+}
+function closeView(){ $('viewer').hidden=true; $('vimg').removeAttribute('src'); renderGallery(); }
+function step(d){ if(vi+d<0||vi+d>=shown.length) return; vi+=d; showView(); }
+$('vclose').onclick=closeView; $('vprev').onclick=()=>step(-1); $('vnext').onclick=()=>step(1);
+let tx=null; $('stage').addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+$('stage').addEventListener('touchend',e=>{ if(tx==null) return; const dx=e.changedTouches[0].clientX-tx; tx=null; if(Math.abs(dx)>50) step(dx<0?1:-1); });
+$('vfav').onclick=()=>{const x=shown[vi]; const on=A.toggle('favs',x.name); refreshState(); showView(); toast(on?'Added to favourites':'Removed from favourites');};
+$('vhide').onclick=()=>{const x=shown[vi]; const on=A.toggle('hidden',x.name); refreshState(); showView(); toast(on?'Won’t be used by automatic change':'Back in the rotation');};
+$('vsave').onclick=async()=>{const b=$('vsave'); b.disabled=true; const r=await call('save',shown[vi].name); b.disabled=false; toast(r.message,!r.ok);};
+document.querySelectorAll('[data-set]').forEach(b=>b.onclick=async()=>{
+  const x=shown[vi], t=b.dataset.set; document.querySelectorAll('[data-set]').forEach(y=>y.disabled=true);
+  const r=await call('apply',x.name,t);
+  document.querySelectorAll('[data-set]').forEach(y=>y.disabled=false);
+  refreshState(); showView(); renderNow(); renderHist();
+  toast(r.ok?'Set on '+TARGET[t].toLowerCase():r.message,!r.ok);
+});
+window.onBack=()=>{ if(!$('viewer').hidden){closeView();return true;} if(curTab!=='gallery'){selTab('gallery');return true;} return false; };
+window.onResumeApp=()=>{ refreshState(); renderNow(); renderHist(); };
+
+/* ---------- tabs ---------- */
+let curTab='gallery';
+function selTab(t){curTab=t; document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));
+  ['gallery','auto','hist'].forEach(s=>$(s).hidden=s!==t); window.scrollTo(0,0);}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>selTab(b.dataset.tab));
+
+/* ---------- auto change settings ---------- */
+const MODES=[['off','Off','Only change it yourself'],['hours','Every few hours',''],['daily','Every day',''],['weekly','Every week',''],['new','When a new wallpaper is published','Uses the newest one as soon as it appears']];
+const DAYS=[[2,'Monday'],[3,'Tuesday'],[4,'Wednesday'],[5,'Thursday'],[6,'Friday'],[7,'Saturday'],[1,'Sunday']];
+function set(k,v){A.set(k,String(v)); refreshState(); renderAuto(); renderNow();}
+function opt(kind,key,val,label,small){const on=kind==='radio'?S[key]===val:!!S[key];
+  return `<button class="opt" type="button" role="${kind==='radio'?'radio':'switch'}" aria-checked="${on}" data-k="${key}" data-v="${kind==='radio'?val:!on}">`+
+    (kind==='radio'?'<span class="radio"></span>':'')+`<span class="l">${label}${small?`<small>${small}</small>`:''}</span>`+(kind==='switch'?'<span class="sw"></span>':'')+'</button>';}
+function renderAuto(){
+  $('modes').innerHTML='<h2>Change the wallpaper</h2>'+MODES.map(([v,l,s])=>opt('radio','mode',v,l,s)).join('');
+  const w=$('when'), ws=$('whensel'), m=S.mode;
+  w.hidden=!(m==='hours'||m==='daily'||m==='weekly');
+  const hrs=Array.from({length:24},(_,h)=>`<option value="${h}"${S.hour===h?' selected':''}>${String(h).padStart(2,'0')}:00</option>`).join('');
+  ws.innerHTML = m==='hours' ? `<label>Every<select data-k="hours">${[1,2,3,6,12].map(h=>`<option value="${h}"${S.hours===h?' selected':''}>${h} hour${h>1?'s':''}</option>`).join('')}</select></label>`
+    : (m==='weekly'?`<label>Day<select data-k="weekday">${DAYS.map(([v,l])=>`<option value="${v}"${S.weekday===v?' selected':''}>${l}</option>`).join('')}</select></label>`:'')+`<label>Time<select data-k="hour">${hrs}</select></label>`;
+  $('target').innerHTML=[['home','Home'],['lock','Lock'],['both','Both']].map(([v,l])=>`<button type="button" data-k="target" data-v="${v}" aria-pressed="${S.target===v}">${l}</button>`).join('');
+  $('order').innerHTML=[['random','Shuffle'],['order','Newest to oldest']].map(([v,l])=>`<button type="button" data-k="order" data-v="${v}" aria-pressed="${S.order===v}">${l}</button>`).join('');
+  $('toggles1').innerHTML=opt('switch','favOnly',0,'Only favourites',S.favs.length?S.favs.length+' marked with ★':'Mark some with ★ in the gallery first')+
+    opt('switch','newFirst',0,'New wallpapers first','Show newly published ones before the rest');
+  $('toggles2').innerHTML=opt('switch','wifiOnly',0,'Only on Wi-Fi','Don’t download wallpapers over mobile data')+
+    opt('switch','notifyNew',0,'Tell me about new wallpapers',S.notifyNew&&!S.notifyAllowed?'Notifications are blocked – allow them in Android settings':'A notification when new ones are published');
+  $('foot').innerHTML='Wallpapers '+esc(S.version)+' · <a href="#" id="site">jonsolberg.se</a><br>Free and open source, no ads. Like the wallpapers? <a href="#" id="kofi">🍺 Buy me a beer</a>';
+}
+$('auto').addEventListener('click',e=>{const b=e.target.closest('[data-k][data-v]'); if(!b) return; set(b.dataset.k,b.dataset.v);});
+$('auto').addEventListener('change',e=>{const s=e.target.closest('select[data-k]'); if(s) set(s.dataset.k,s.value);});
+document.addEventListener('click',e=>{ if(e.target.id==='site'){e.preventDefault();A.open('https://jonsolberg.se:8080/Pictures/');}
+  if(e.target.id==='kofi'){e.preventDefault();A.open('https://ko-fi.com/jonsolberg');} });
+
+/* ---------- history ---------- */
+function renderHist(){
+  const h=S.history||[];
+  $('histempty').hidden=h.length>0;
+  $('histlist').innerHTML=h.map((x,i)=>{const it=byName(x.name);
+    return `<li><button type="button" data-h="${esc(x.name)}">${it?`<img src="${esc(it.url)}" alt="" loading="lazy">`:'<span class="ph"></span>'}`+
+      `<span><span class="t">${esc(x.title||x.name)}</span><br><span class="m">${esc(TARGET[x.target]||'')} · ${fmtWhen(x.time)}</span></span></button></li>`;}).join('');
+}
+$('histlist').addEventListener('click',e=>{const b=e.target.closest('[data-h]'); if(!b) return; filter='all'; renderGallery(); const i=shown.findIndex(x=>x.name===b.dataset.h); if(i>=0) openView(i);});
+
+renderAuto(); renderNow(); renderHist();
+loadList(false);
+})();
+</script>
+</body>
+</html>

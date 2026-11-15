@@ -1,0 +1,14 @@
+Package: jonsolberg-wallpapers
+Version: 1.3
+Section: graphics
+Priority: optional
+Architecture: all
+Depends: python3 (>= 3.8), python3-gi, gir1.2-gtk-3.0, gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1
+Recommends: libnotify-bin, gnome-shell-extension-appindicator
+Maintainer: Jon Solberg <jonsolberg.x@gmail.com>
+Homepage: https://jonsolberg.se:8080/
+Description: Wallpapers from jonsolberg.se in the top bar
+ Changes the desktop picture every hour, day or week, or when a new
+ wallpaper is published on jonsolberg.se, and picks the picture size
+ that fits the screen (Full HD, 16:10, ultrawide or 4K).
+ Works on GNOME (Ubuntu), KDE Plasma, Xfce, Cinnamon and MATE.

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut"
+        android:shortcutId="next"
+        android:shortcutLongLabel="@string/next_long"
+        android:shortcutShortLabel="@string/next_short">
+        <intent
+            android:action="se.jonsolberg.wallpapers.NEXT"
+            android:targetClass="se.jonsolberg.wallpapers.NextActivity"
+            android:targetPackage="se.jonsolberg.wallpapers" />
+    </shortcut>
+</shortcuts>

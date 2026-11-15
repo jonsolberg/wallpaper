@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wallpapers</string>
+    <string name="next_long">Change to the next wallpaper</string>
+    <string name="next_short">Next wallpaper</string>
+    <string name="tile_label">Next wallpaper</string>
+    <string name="channel_new">New wallpapers</string>
+</resources>
