@@ -14,11 +14,12 @@ every week, or as soon as a new one is published. Each app picks the picture siz
 |---|---|---|
 | Android 10+ | [`android/`](android) | Gallery, favourites, automatic change of home and/or lock screen, a "Next wallpaper" shortcut and quick settings tile |
 | Linux | [`linux/`](linux) | Tray app for GNOME (Ubuntu), KDE Plasma, Xfce, Cinnamon and MATE, packaged as a `.deb` |
-| Windows | – | The Windows tray app is available on [jonsolberg.se](https://jonsolberg.se:8080/tools.html); its source will be added here |
+| Windows 10/11 | [`windows/`](windows) | Notification-area app with thumbnails in its menu, light and dark mode, start with Windows |
 
 ## Download
 
-**[Latest release](https://github.com/jonsolberg/wallpaper/releases/latest)** – `Wallpapers.apk` for Android and
+**[Latest release](https://github.com/jonsolberg/wallpaper/releases/latest)** – `Wallpapers.apk` for Android,
+`Wallpapers-Windows.exe` for Windows (no installer needed; it adds itself to start with Windows) and
 `jonsolberg-wallpapers_<version>_all.deb` for Linux:
 
 ```
@@ -27,13 +28,15 @@ sudo apt install ./jonsolberg-wallpapers_*_all.deb
 
 ## Building
 
-Every push builds both packages with GitHub Actions (`.github/workflows/build.yml`) and publishes them as a release.
+Every push builds all three apps with GitHub Actions (`.github/workflows/build.yml`) and publishes them as a release.
 
 - **Android:** `cd android && ./gradlew assembleRelease`. Release builds are signed with the key from the
   repository secrets `SIGNING_KEYSTORE_B64`, `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_ALIAS` and `SIGNING_KEY_PASSWORD`;
   without them the APK is debug-signed.
 - **Linux:** the `linux/` folder is the package tree; `dpkg-deb --root-owner-group -b linux out.deb` builds it
   (the workflow adds `Installed-Size`).
+- **Windows:** `sh windows/build.sh` compiles `Wallpapers-Windows.exe` with Mono's C# compiler (`apt install mono-devel`).
+  It runs on the .NET Framework 4 that comes with Windows 10 and 11.
 
 ## Support
 

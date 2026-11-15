@@ -49,6 +49,12 @@ jobs:
           echo "Installed-Size: $(du -sk /tmp/pkg/usr | cut -f1)" >> /tmp/pkg/DEBIAN/control
           dpkg-deb --root-owner-group -b /tmp/pkg "out/jonsolberg-wallpapers_${VERSION}_all.deb"
 
+      - name: Build the Windows app
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q mono-devel
+          sh windows/build.sh
+
       - uses: actions/upload-artifact@v4
         with:
           name: wallpapers
@@ -61,11 +67,12 @@ jobs:
         run: |
           APK=$(grep -oP 'versionName = "\K[^"]+' android/app/build.gradle.kts)
           DEB=$(grep -oP '^Version: \K.+' linux/DEBIAN/control)
-          TAG="android-$APK-linux-$DEB"
+          WIN=$(grep -oP 'const string Version = "\K[^"]+' windows/Wallpapers.cs)
+          TAG="android-$APK-linux-$DEB-windows-$WIN"
           cp out/Wallpapers.apk "out/Wallpapers-$APK.apk"
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" out/* --clobber
           else
             gh release create "$TAG" out/* --target "$GITHUB_SHA" \
-              --title "Wallpapers – Android $APK, Linux $DEB" --notes "Built from ${GITHUB_SHA::7}." --latest
+              --title "Wallpapers – Android $APK, Linux $DEB, Windows $WIN" --notes "Built from ${GITHUB_SHA::7}." --latest
           fi
