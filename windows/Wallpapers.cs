@@ -25,8 +25,8 @@ using Microsoft.Win32;
 [assembly: AssemblyTitle("Wallpapers from jonsolberg.se")]
 [assembly: AssemblyProduct("Wallpapers")]
 [assembly: AssemblyCopyright("Copyright (C) 2026 Jon Solberg – GNU GPL v3")]
-[assembly: AssemblyVersion("1.6.0.0")]
-[assembly: AssemblyFileVersion("1.6.0.0")]
+[assembly: AssemblyVersion("1.6.1.0")]
+[assembly: AssemblyFileVersion("1.6.1.0")]
 
 namespace JonSolberg.Wallpapers
 {
@@ -99,7 +99,7 @@ namespace JonSolberg.Wallpapers
 
     public class App : ApplicationContext
     {
-        public const string Version = "1.6";
+        public const string Version = "1.6.1";
         public const string Base = "https://jonsolberg.se:8080";
         const string Kofi = "https://ko-fi.com/jonsolberg";
         const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run", RunName = "jonsolberg-wallpapers";
@@ -666,6 +666,7 @@ namespace JonSolberg.Wallpapers
             var dd = (ToolStripDropDownMenu)parent.DropDown;
             dd.MaximumSize = new Size(0, Math.Max(300, Screen.PrimaryScreen.WorkingArea.Height * 7 / 10));
             dd.MouseWheel += (o, e) => ScrollMenu(dd, e.Delta);
+            if (DarkMode) dd.Opened += (o, e) => DarkScrollButtons(dd);
             foreach (var it in list)
             {
                 var x = it;
@@ -676,6 +677,44 @@ namespace JonSolberg.Wallpapers
         // WinForms menus only scroll with their arrow buttons; this makes the mouse wheel work too.
         static readonly MethodInfo ScrollInternal = typeof(ToolStripDropDownMenu).GetMethod("ScrollInternal",
             BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(int) }, null);
+
+        /// <summary>The up and down arrows of a long menu are white by default; paint them like the rest of a dark menu.</summary>
+        static void DarkScrollButtons(ToolStripDropDownMenu m)
+        {
+            foreach (var up in new[] { true, false })
+            {
+                object b = null;
+                var t = typeof(ToolStripDropDownMenu);
+                var prop = t.GetProperty(up ? "UpScrollButton" : "DownScrollButton", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (prop != null) b = prop.GetValue(m, null);
+                if (b == null)
+                {
+                    var field = t.GetField(up ? "upScrollButton" : "downScrollButton", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (field != null) b = field.GetValue(m);
+                }
+                var host = b as ToolStripControlHost;
+                if (host == null) continue;
+                host.BackColor = DarkColors.Bg;
+                if (host.Control == null) continue;
+                host.Control.BackColor = DarkColors.Bg;
+                host.Control.ForeColor = Color.White;
+                var label = host.Control as Label;
+                if (label != null) label.Image = Arrow(up);
+            }
+        }
+
+        static Image Arrow(bool up)
+        {
+            var b = new Bitmap(9, 5);
+            using (var g = Graphics.FromImage(b))
+            using (var br = new SolidBrush(Color.White))
+            {
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.FillPolygon(br, up ? new[] { new Point(0, 5), new Point(9, 5), new Point(4, 0) }
+                                     : new[] { new Point(0, 0), new Point(9, 0), new Point(4, 5) });
+            }
+            return b;
+        }
 
         static void ScrollMenu(ToolStripDropDownMenu m, int delta)
         {
@@ -826,7 +865,7 @@ namespace JonSolberg.Wallpapers
 
         class DarkColors : ProfessionalColorTable
         {
-            static readonly Color Bg = Color.FromArgb(32, 32, 32), Hover = Color.FromArgb(55, 55, 60), Line = Color.FromArgb(70, 70, 70);
+            public static readonly Color Bg = Color.FromArgb(32, 32, 32); static readonly Color Hover = Color.FromArgb(55, 55, 60), Line = Color.FromArgb(70, 70, 70);
             public override Color ToolStripDropDownBackground { get { return Bg; } }
             public override Color ImageMarginGradientBegin { get { return Bg; } }
             public override Color ImageMarginGradientMiddle { get { return Bg; } }
