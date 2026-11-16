@@ -14,7 +14,7 @@ every week, or as soon as a new one is published. Each app picks the picture siz
 |---|---|---|
 | Android 10+ | [`android/`](android) | Gallery, favourites, automatic change of home and/or lock screen, a "Next wallpaper" shortcut and quick settings tile |
 | Linux | [`linux/`](linux) | Tray app for GNOME (Ubuntu), KDE Plasma, Xfce, Cinnamon and MATE, packaged as a `.deb` |
-| Windows 10/11 | [`windows/`](windows) | Notification-area app with thumbnails in its menu, light and dark mode, start with Windows |
+| Windows 10/11 | [`windows/`](windows) | Notification-area app – left-click the icon for the next wallpaper, right-click for the menu with thumbnails – light and dark mode, start with Windows |
 
 ## Download
 

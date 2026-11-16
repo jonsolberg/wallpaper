@@ -26,8 +26,8 @@ using Microsoft.Win32;
 [assembly: AssemblyTitle("Wallpapers from jonsolberg.se")]
 [assembly: AssemblyProduct("Wallpapers")]
 [assembly: AssemblyCopyright("Copyright (C) 2026 Jon Solberg – GNU GPL v3")]
-[assembly: AssemblyVersion("1.7.0.0")]
-[assembly: AssemblyFileVersion("1.7.0.0")]
+[assembly: AssemblyVersion("1.8.0.0")]
+[assembly: AssemblyFileVersion("1.8.0.0")]
 
 namespace JonSolberg.Wallpapers
 {
@@ -100,7 +100,7 @@ namespace JonSolberg.Wallpapers
 
     public class App : ApplicationContext
     {
-        public const string Version = "1.7";
+        public const string Version = "1.8";
         public const string Base = "https://jonsolberg.se:8080";
         const string Kofi = "https://ko-fi.com/jonsolberg";
         const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run", RunName = "jonsolberg-wallpapers";
@@ -140,11 +140,10 @@ namespace JonSolberg.Wallpapers
                 Text = "Wallpapers from jonsolberg.se",
                 Visible = true
             };
+            // left click = next wallpaper, right click = menu
             tray.MouseUp += (o, e) => {
-                if (e.Button == MouseButtons.Left) ShowMenu();
-                if (e.Button == MouseButtons.Middle) Next();
+                if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Middle) Next();
             };
-            tray.DoubleClick += (o, e) => Next();
             Build();
             timer = new System.Windows.Forms.Timer { Interval = 60 * 1000 };
             timer.Tick += (o, e) => Tick();
@@ -565,13 +564,6 @@ namespace JonSolberg.Wallpapers
         // ------------------------------------------------------------------ the menu
 
         ContextMenuStrip menu;
-
-        void ShowMenu()
-        {
-            // NotifyIcon only opens its menu on right-click; this opens it on left-click too.
-            var mi = typeof(NotifyIcon).GetMethod("ShowContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (mi != null) mi.Invoke(tray, null);
-        }
 
         static bool DarkMode
         {
