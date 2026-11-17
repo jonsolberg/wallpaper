@@ -325,7 +325,7 @@ function renderAuto(){
     opt('switch','newFirst',0,'New wallpapers first','Show newly published ones before the rest');
   $('toggles2').innerHTML=opt('switch','wifiOnly',0,'Only on Wi-Fi','Don’t download wallpapers over mobile data')+
     opt('switch','notifyNew',0,'Tell me about new wallpapers',S.notifyNew&&!S.notifyAllowed?'Notifications are blocked – allow them in Android settings':'A notification when new ones are published');
-  $('foot').innerHTML='Wallpapers '+esc(S.version)+' · <a href="#" id="site">jonsolberg.se</a><br>Free and open source, no ads. Like the wallpapers? <a href="#" id="kofi">🍺 Buy me a beer</a>';
+  $('foot').innerHTML='Wallpapers '+esc(S.version)+' · <a href="#" id="site">jonsolberg.se</a><br>Free and open source, no ads. Like the wallpapers? <a href="#" id="kofi">❤️ Support me</a>';
 }
 $('auto').addEventListener('click',e=>{const b=e.target.closest('[data-k][data-v]'); if(!b) return; set(b.dataset.k,b.dataset.v);});
 $('auto').addEventListener('change',e=>{const s=e.target.closest('select[data-k]'); if(s) set(s.dataset.k,s.value);});

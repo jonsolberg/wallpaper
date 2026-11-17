@@ -25,7 +25,7 @@ for _name in ('AyatanaAppIndicator3', 'AppIndicator3'):
     except (ValueError, ImportError, KeyError):
         pass
 
-VERSION = '1.3'
+VERSION = '1.4'
 APP = 'jonsolberg-wallpapers'
 BASE = 'https://jonsolberg.se:8080'
 SITE_BASE = os.environ.get('JSW_BASE', BASE)
@@ -843,7 +843,7 @@ class App:
         check('Start when I log in', os.path.exists(AUTOSTART), lambda v: (self.set_autostart(v), self.build()))
         m.append(Gtk.SeparatorMenuItem())
         item('Open the gallery on jonsolberg.se', lambda: Gio.AppInfo.launch_default_for_uri(BASE + '/Pictures/', None))
-        item('🍺 Buy me a beer on Ko-fi', lambda: Gio.AppInfo.launch_default_for_uri('https://ko-fi.com/jonsolberg', None))
+        item('❤️ Support me on Ko-fi', lambda: Gio.AppInfo.launch_default_for_uri('https://ko-fi.com/jonsolberg', None))
         item('Version %s · jonsolberg.se' % VERSION, lambda: Gio.AppInfo.launch_default_for_uri(BASE + '/', None))
         item('Quit', Gtk.main_quit)
         m.show_all()

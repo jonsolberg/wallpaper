@@ -42,9 +42,9 @@ Every push builds all three apps with GitHub Actions (`.github/workflows/build.y
 ## Support
 
 The apps and wallpapers are free, open source and have no ads. If you enjoy them, you can
-[buy me a beer on Ko-fi](https://ko-fi.com/jonsolberg) 🍺
+[support me on Ko-fi](https://ko-fi.com/jonsolberg) ❤️
 
-[![Buy me a beer on Ko-fi](https://img.shields.io/badge/Ko--fi-buy%20me%20a%20beer-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/jonsolberg)
+[![Support me on Ko-fi](https://img.shields.io/badge/Ko--fi-support%20me-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/jonsolberg)
 
 ## License
 

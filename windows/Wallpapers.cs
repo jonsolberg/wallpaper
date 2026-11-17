@@ -26,7 +26,7 @@ using Microsoft.Win32;
 [assembly: AssemblyTitle("Wallpapers from jonsolberg.se")]
 [assembly: AssemblyProduct("Wallpapers")]
 [assembly: AssemblyCopyright("Copyright (C) 2026 Jon Solberg – GNU GPL v3")]
-[assembly: AssemblyVersion("1.8.0.0")]
+[assembly: AssemblyVersion("1.9.0.0")]
 [assembly: AssemblyFileVersion("1.8.0.0")]
 
 namespace JonSolberg.Wallpapers
@@ -100,7 +100,7 @@ namespace JonSolberg.Wallpapers
 
     public class App : ApplicationContext
     {
-        public const string Version = "1.8";
+        public const string Version = "1.9";
         public const string Base = "https://jonsolberg.se:8080";
         const string Kofi = "https://ko-fi.com/jonsolberg";
         const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run", RunName = "jonsolberg-wallpapers";
@@ -803,7 +803,7 @@ namespace JonSolberg.Wallpapers
             m.Items.Add(Check("Start when I log in", Autostart, v => { Autostart = v; Build(); }));
             m.Items.Add(new ToolStripSeparator());
             m.Items.Add(Entry("Open the gallery on jonsolberg.se", () => Open(Base + "/Pictures/")));
-            m.Items.Add(Entry("🍺 Buy me a beer on Ko-fi", () => Open(Kofi)));
+            m.Items.Add(Entry("❤️ Support me on Ko-fi", () => Open(Kofi)));
             m.Items.Add(Entry("Version " + Version + " · jonsolberg.se", () => Open(Base + "/")));
             m.Items.Add(Entry("Quit", Quit));
 
