@@ -70,6 +70,7 @@ jobs:
           WIN=$(grep -oP 'const string Version = "\K[^"]+' windows/Wallpapers.cs)
           TAG="android-$APK-linux-$DEB-windows-$WIN"
           cp out/Wallpapers.apk "out/Wallpapers-$APK.apk"
+          cp "out/jonsolberg-wallpapers_${DEB}_all.deb" out/jonsolberg-wallpapers_all.deb
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" out/* --clobber
           else

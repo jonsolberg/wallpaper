@@ -25,7 +25,7 @@ for _name in ('AyatanaAppIndicator3', 'AppIndicator3'):
     except (ValueError, ImportError, KeyError):
         pass
 
-VERSION = '1.4'
+VERSION = '1.5'
 APP = 'jonsolberg-wallpapers'
 BASE = 'https://jonsolberg.se:8080'
 SITE_BASE = os.environ.get('JSW_BASE', BASE)
@@ -845,6 +845,7 @@ class App:
         item('Open the gallery on jonsolberg.se', lambda: Gio.AppInfo.launch_default_for_uri(BASE + '/Pictures/', None))
         item('❤️ Support me on Ko-fi', lambda: Gio.AppInfo.launch_default_for_uri('https://ko-fi.com/jonsolberg', None))
         item('Version %s · jonsolberg.se' % VERSION, lambda: Gio.AppInfo.launch_default_for_uri(BASE + '/', None))
+        item('© 2026 Jon Solberg · source and help on GitHub', lambda: Gio.AppInfo.launch_default_for_uri('https://github.com/jonsolberg/wallpaper', None))
         item('Quit', Gtk.main_quit)
         m.show_all()
         self.ind.set_secondary_activate_target(None)

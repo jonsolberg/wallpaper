@@ -100,7 +100,7 @@ namespace JonSolberg.Wallpapers
 
     public class App : ApplicationContext
     {
-        public const string Version = "1.9";
+        public const string Version = "1.10";
         public const string Base = "https://jonsolberg.se:8080";
         const string Kofi = "https://ko-fi.com/jonsolberg";
         const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run", RunName = "jonsolberg-wallpapers";
@@ -805,6 +805,7 @@ namespace JonSolberg.Wallpapers
             m.Items.Add(Entry("Open the gallery on jonsolberg.se", () => Open(Base + "/Pictures/")));
             m.Items.Add(Entry("❤️ Support me on Ko-fi", () => Open(Kofi)));
             m.Items.Add(Entry("Version " + Version + " · jonsolberg.se", () => Open(Base + "/")));
+            m.Items.Add(Entry("© 2026 Jon Solberg · source and help on GitHub", () => Open("https://github.com/jonsolberg/wallpaper")));
             m.Items.Add(Entry("Quit", Quit));
 
             var old = menu;
