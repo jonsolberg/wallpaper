@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
         web = new WebView(this);
         web.setBackgroundColor(getColor(R.color.bg));
         setContentView(web);
+        if (savedInstanceState == null) UpdateChecker.start(this);
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
