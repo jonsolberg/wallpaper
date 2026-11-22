@@ -45,11 +45,21 @@ Every push builds all three apps with GitHub Actions (`.github/workflows/build.y
 
 ## Support
 
-The apps and wallpapers are free, open source and have no ads. If you enjoy them, you can
+The apps and wallpapers are free, open source and have no ads. If you find them useful, you can
 [support me on Ko-fi](https://ko-fi.com/jonsolberg) ❤️
 
 [![Support me on Ko-fi](https://img.shields.io/badge/Ko--fi-support%20me-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/jonsolberg)
 
 ## License
 
-GNU General Public License v3.0 – see [LICENSE](LICENSE). The wallpapers themselves are © Jon Solberg.
+Copyright © 2026 Jon Solberg
+
+This program is free software: you can redistribute it and/or modify it under the terms of the
+GNU General Public License as published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+[GNU General Public License](LICENSE) for more details.
+
+The wallpapers themselves are © Jon Solberg.
