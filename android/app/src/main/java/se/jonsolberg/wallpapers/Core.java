@@ -189,7 +189,7 @@ final class Core {
             String slug = m.matches() ? m.group(1) : name;
             String t = slug.replaceFirst("^jonsolberg-", "").replaceFirst("^wallpaper-", "").replace('-', ' ').replace('_', ' ');
             this.title = t.isEmpty() ? name : t.substring(0, 1).toUpperCase(Locale.ROOT) + t.substring(1);
-            this.thumb = BASE + "/thumbs/" + Uri.encode(name.replaceAll("\\.[^.]+$", ".jpg"));
+            this.thumb = BASE + "/Images/thumbs/" + Uri.encode(name.replaceAll("\\.[^.]+$", ".jpg"));
         }
 
         JSONObject json() throws JSONException {

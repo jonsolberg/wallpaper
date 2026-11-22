@@ -26,8 +26,8 @@ using Microsoft.Win32;
 [assembly: AssemblyTitle("Wallpapers from jonsolberg.se")]
 [assembly: AssemblyProduct("Wallpapers")]
 [assembly: AssemblyCopyright("Copyright (C) 2026 Jon Solberg – GNU GPL v3")]
-[assembly: AssemblyVersion("1.9.0.0")]
-[assembly: AssemblyFileVersion("1.8.0.0")]
+[assembly: AssemblyVersion("1.11.0.0")]
+[assembly: AssemblyFileVersion("1.11.0.0")]
 
 namespace JonSolberg.Wallpapers
 {
@@ -82,7 +82,7 @@ namespace JonSolberg.Wallpapers
             {
                 string u = Urls.ContainsKey("1920x1080") ? Urls["1920x1080"] : Urls.Values.First();
                 string name = Uri.UnescapeDataString(u.Substring(u.LastIndexOf('/') + 1));
-                return App.Base + "/thumbs/" + Uri.EscapeDataString(Regex.Replace(name, @"\.[^.]+$", ".jpg"));
+                return App.Base + "/Images/thumbs/" + Uri.EscapeDataString(Regex.Replace(name, @"\.[^.]+$", ".jpg"));
             }
         }
     }
@@ -100,7 +100,7 @@ namespace JonSolberg.Wallpapers
 
     public class App : ApplicationContext
     {
-        public const string Version = "1.10";
+        public const string Version = "1.11";
         public const string Base = "https://jonsolberg.se:8080";
         const string Kofi = "https://ko-fi.com/jonsolberg";
         const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run", RunName = "jonsolberg-wallpapers";

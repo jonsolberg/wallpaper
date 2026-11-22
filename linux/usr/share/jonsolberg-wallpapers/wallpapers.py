@@ -25,7 +25,7 @@ for _name in ('AyatanaAppIndicator3', 'AppIndicator3'):
     except (ValueError, ImportError, KeyError):
         pass
 
-VERSION = '1.5'
+VERSION = '1.6'
 APP = 'jonsolberg-wallpapers'
 BASE = 'https://jonsolberg.se:8080'
 SITE_BASE = os.environ.get('JSW_BASE', BASE)
@@ -96,7 +96,7 @@ class Item:
     def thumb_url(self):
         u = self.urls.get('1920x1080') or next(iter(self.urls.values()))
         name = urllib.parse.unquote(u.rsplit('/', 1)[1])
-        return SITE_BASE + '/thumbs/' + urllib.parse.quote(re.sub(r'\.[^.]+$', '.jpg', name))
+        return SITE_BASE + '/Images/thumbs/' + urllib.parse.quote(re.sub(r'\.[^.]+$', '.jpg', name))
 
 
 def fetch(url, timeout=30):
