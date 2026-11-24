@@ -1,4 +1,4 @@
-# Wallpapers from jonsolberg.se (Windows, Android, Linux)
+# Wallpapers from jonsolberg.se (Android, Linux, Windows)
 
 Apps that change your wallpaper to the free, original wallpapers published on
 [jonsolberg.se](https://jonsolberg.se:8080/Pictures/) – a new picture every few hours, every day,
